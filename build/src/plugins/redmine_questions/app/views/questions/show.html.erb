@@ -1,0 +1,9 @@
+<%= question_breadcrumb @question_item %>
+<!-- <PRO> -->
+<%= render :partial => @question_item.section_type.singularize %>
+<!-- </PRO> -->
+
+<!-- <LIGHT> 
+<%= render :partial => 'question' if QA_VERSION_TYPE.match(/Light/) %> 
+</LIGHT> -->
+<% html_title @question_item.subject %>

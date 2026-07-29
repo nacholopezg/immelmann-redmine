@@ -1,0 +1,10 @@
+<p>
+  <label><%= l(:label_my_activity_enable) %></label>
+  <%= check_box_tag 'settings[my_activity_enable]', 1, settings.present? && settings['my_activity_enable'] == '1' %>
+  <br />
+  <em><%= l(:em_my_activity_enable) %></em>
+</p>
+<p>
+  <label><%= l(:label_homelink_override) %></label>
+  <%= check_box_tag 'settings[homelink_override]', 1, settings.present? && settings['homelink_override'] == '1' %>
+</p>

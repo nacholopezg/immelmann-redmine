@@ -1,0 +1,27 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: planifica
+  namespace: aesa-planifica
+  labels:
+    app: planifica
+    app.kubernetes.io/component: planifica
+    app.kubernetes.io/instance: planifica
+    app.kubernetes.io/name: planifica
+    app.kubernetes.io/part-of: planifica
+    app.openshift.io/runtime-version: 1.0.0
+spec:
+  ports:
+    - name: 3000-tcp
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
+    - name: 5000-tcp
+      protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
+  selector:
+    app: planifica
+    deployment: planifica
+

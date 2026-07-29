@@ -1,0 +1,64 @@
+<%= labelled_fields_for :risk, @risk do |f| %>
+  <% if @risk.safe_attribute? 'subject' %>
+    <p><%= f.text_field :subject, :size => 80, :maxlength => 255, :required => true %></p>
+  <% end %>
+
+  <% if @risk.safe_attribute? 'description' %>
+    <p>
+      <%= f.label_for_field :description %>
+      <%= link_to_function content_tag(:span, l(:button_edit), :class => 'icon icon-edit'), '$(this).hide(); $("#risk_description_and_toolbar").show()' unless @risk.new_record? %>
+      <%= content_tag 'span', :id => "risk_description_and_toolbar", :style => (@risk.new_record? ? nil : 'display:none') do %>
+        <%= f.text_area :description,
+                        :cols => 60,
+                        :rows => [[10, @risk.description.to_s.length / 50].max, 20].min,
+                        :accesskey => accesskey(:edit),
+                        :class => 'wiki-edit',
+                        :no_label => true %>
+      <% end %>
+    </p>
+
+    <% if Redmine::VERSION.to_s >= '4.0' %>
+      <%= wikitoolbar_for 'risk_description', preview_new_risk_path(:project_id => @risk.project) %>
+    <% else %>
+      <%= wikitoolbar_for 'risk_description' %>
+    <% end %>
+  <% end %>
+
+  <div id="attributes" class="attributes">
+    <%= render :partial => 'risks/attributes' %>
+  </div>
+
+  <% if @risk.safe_attribute?('treatments') && ! @risk.new_record? %>
+    <p>
+      <%= f.label_for_field :treatments %>
+      <%= link_to_function content_tag(:span, l(:button_edit), :class => 'icon icon-edit'), '$(this).hide(); $("#risk_treatments_and_toolbar").show()' unless @risk.new_record? %>
+      <%= content_tag 'span', :id => "risk_treatments_and_toolbar", :style => (@risk.new_record? ? nil : 'display:none') do %>
+        <%= f.text_area :treatments,
+                        :cols => 60,
+                        :rows => [[10, @risk.treatments.to_s.length / 50].max, 20].min,
+                        :accesskey => accesskey(:edit),
+                        :class => 'wiki-edit',
+                        :no_label => true %>
+      <% end %>
+    </p>
+    <%= wikitoolbar_for 'risk_treatments' %>
+  <% end %>
+
+  <% if @risk.safe_attribute?('lessons') && ! @risk.new_record? %>
+    <p>
+      <%= f.label_for_field :lessons %>
+      <%= link_to_function content_tag(:span, l(:button_edit), :class => 'icon icon-edit'), '$(this).hide(); $("#risk_lessons_and_toolbar").show()' unless @risk.new_record? %>
+      <%= content_tag 'span', :id => "risk_lessons_and_toolbar", :style => (@risk.new_record? ? nil : 'display:none') do %>
+        <%= f.text_area :lessons,
+                        :cols => 60,
+                        :rows => [[10, @risk.lessons.to_s.length / 50].max, 20].min,
+                        :accesskey => accesskey(:edit),
+                        :class => 'wiki-edit',
+                        :no_label => true %>
+      <% end %>
+    </p>
+    <%= wikitoolbar_for 'risk_lessons' %>
+  <% end %>
+
+  <%= call_hook(:view_risks_form_details_bottom, { :risk => @risk, :form => f }) %>
+<% end %>

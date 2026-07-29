@@ -1,0 +1,104 @@
+# Planifica Pipeline 
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: planifica-pipeline
+  namespace: aesa-planifica
+spec:
+  params:
+    - default: 'https://gitlab.apps.ocpmgm.aviacion.fomento.es/ci-cd/aesa-planifica.git'
+      description: URL del repositorio Git a clonar.
+      name: GIT_REPO
+      type: string
+    - default: main
+      description: Rama del repositorio Git a clonar.
+      name: GIT_BRANCH
+      type: string
+    - default: deploy/overlay/val
+      description: Ruta al overlay de Kustomize
+      name: OVERLAY_PATH
+      type: string
+    - default: planifica
+      description: Nombre del deployment a reiniciar
+      name: DEPLOYMENT_NAME
+      type: string
+  tasks:
+    - name: clone-repository
+      params:
+        - name: URL
+          value: $(params.GIT_REPO)
+        - name: REVISION
+          value: $(params.GIT_BRANCH)
+        - name: SPARSE_CHECKOUT_DIRECTORIES
+          value: deploy
+        - name: DELETE_EXISTING
+          value: 'true'
+        - name: SUBDIRECTORY
+          value: repo-clone
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: output
+          workspace: planifica-pipeline-pvc
+        - name: basic-auth
+          workspace: gitlab-credentials
+    - name: deploy-app
+      params:
+        - name: OVERLAY_PATH
+          value: repo-clone/$(params.OVERLAY_PATH)
+        - name: DEPLOYMENT_NAME
+          value: $(params.DEPLOYMENT_NAME)
+      runAfter:
+        - clone-repository
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: deploy
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: source
+          workspace: planifica-pipeline-pvc
+  workspaces:
+    - description: PersistentVolumeClaim donde se clonarán los ficheros para el despliegue.
+      name: planifica-pipeline-pvc
+    - description: Secret con credenciales de GitLab para autenticación en el repositorio de código.
+      name: gitlab-credentials
+---
+# Secret Gitlab credentials
+kind: Secret
+apiVersion: v1
+metadata:
+  name: gitlab-credentials
+  namespace: aesa-planifica
+stringData: 
+  .git-credentials: https://CHANGEME:CHANGEME@gitlab.apps.ocpmgm.aviacion.fomento.es
+  .gitconfig: |
+    [credential "https://gitlab.apps.ocpmgm.aviacion.fomento.es"]
+      helper = store
+type: Opaque
+---
+# Planifica PVC
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: planifica-pipeline-pvc
+  namespace: aesa-planifica
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ocs-storagecluster-ceph-rbd
+  volumeMode: Filesystem

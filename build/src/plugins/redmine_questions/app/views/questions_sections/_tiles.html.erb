@@ -1,0 +1,29 @@
+<% previous_group = false %>
+<div class="section-list">
+<% @sections.each do |section| %>
+  <% if @project.blank? && (group = section.project) != previous_group %>
+    <% reset_cycle %>
+    </div>
+    <% if group %>
+      <div class="project-forums">
+        <h3>
+          <%= group.name %>
+          <%= link_to " \xc2\xbb", project_questions_sections_path(:project_id => group.identifier) %>
+        </h3>
+      </div>
+    <% end %>
+    <div class="section-list">
+    <% previous_group = group %>
+  <% end %>
+    
+    <a href="<%= url_for({:controller => "questions", :action => 'index', :section_id => section, :project_id => section.project}) %>" id="section_<%= section.id %>" class="section-tile">
+      <h4>
+        <%= section.name %>
+        <span class="topic-count"><%= "(#{section.questions_count})" %></span>
+      </h4>
+      <div class="description">
+        <%= section.description %>
+      </div>
+    </a>
+<% end %>
+</ul>

@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"planifica","app.kubernetes.io/component":"planifica","app.kubernetes.io/instance":"planifica","app.kubernetes.io/name":"planifica","app.kubernetes.io/part-of":"planifica","app.openshift.io/runtime-version":"1.0.0"},"name":"planifica","namespace":"aesa-planifica"},"spec":{"ports":[{"name":"3000-tcp","port":3000,"protocol":"TCP","targetPort":3000}],"selector":{"app":"planifica","deployment":"planifica"},"type":"ClusterIP"}}
+  labels:
+    app: planifica
+    app.kubernetes.io/component: planifica
+    app.kubernetes.io/instance: planifica
+    app.kubernetes.io/name: planifica
+    app.kubernetes.io/part-of: planifica
+    app.openshift.io/runtime-version: 1.0.0
+  name: planifica
+  namespace: aesa-planifica
+spec:
+  clusterIP: 172.32.217.141
+  clusterIPs:
+  - 172.32.217.141
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 3000-tcp
+    port: 3000
+    protocol: TCP
+    targetPort: 3000
+  - name: 5000-tcp
+    port: 5000
+    protocol: TCP
+    targetPort: 5000
+  selector:
+    app: planifica
+    deployment: planifica
+  sessionAffinity: None
+  type: ClusterIP
+

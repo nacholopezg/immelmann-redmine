@@ -1,0 +1,11 @@
+require_dependency 'redmine_questions/hooks/views_layouts_hook'
+
+require_dependency 'redmine_questions/patches/user_patch'
+require_dependency 'redmine_questions/patches/project_patch'
+require_dependency 'redmine_questions/patches/notifiable_patch'
+require_dependency 'redmine_questions/patches/mailer_patch'
+require_dependency 'redmine_questions/patches/projects_helper_patch'
+require_dependency 'redmine_questions/patches/auto_completes_controller_patch'
+require_dependency 'redmine_questions/patches/comment_patch'
+
+require_dependency 'acts_as_attachable_questions/init'

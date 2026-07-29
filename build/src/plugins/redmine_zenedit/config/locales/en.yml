@@ -1,0 +1,8 @@
+# English strings go here for Rails i18n
+es:
+  label_zen_placeholder: Dejar un comentario
+  label_click_for_edit: Editar
+  label_unsaved_issue: Hay datos sin salvar. Quiere restaurar dichos datos?
+  label_created_time: Creado hace %{value}
+  label_zen_user_mentions: Menciones de Usuario
+  label_zen_issue_mentions: menciones de tickets

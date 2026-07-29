@@ -1,0 +1,5 @@
+es:
+  label_select_columns: "Selecciones las columnas para las subtareas y tickets relacionados"
+  issue_view_columns_settings: "Columnas del ticket"
+  label_issue_columns_created_sucessfully: "Columnas actualizadas correctamente"
+  label_actions: "Acción"

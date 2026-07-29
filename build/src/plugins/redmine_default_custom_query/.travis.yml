@@ -1,0 +1,34 @@
+language: ruby
+
+rvm:
+  - 2.2
+  - 2.3
+  - 2.4
+  - 2.5
+  - 2.6
+
+env:
+  - REDMINE_REPOS=branches/4.0-stable
+
+before_install:
+  - export PLUGIN_NAME=redmine_default_custom_query
+  - export DB=sqlite
+  - export NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+  - export REDMINE_PATH=$HOME/redmine
+  - export BUNDLE_GEMFILE=$REDMINE_PATH/Gemfile
+  - svn co http://svn.redmine.org/redmine/$REDMINE_REPOS $REDMINE_PATH
+  - ln -s $TRAVIS_BUILD_DIR $REDMINE_PATH/plugins/$PLUGIN_NAME
+  - cp test/database.travis.yml $REDMINE_PATH/config/database.yml
+  - cd $REDMINE_PATH
+  - bundle update
+
+before_script:
+  - bundle exec rake db:migrate
+  - bundle exec rake redmine:plugins:migrate
+
+script:
+  - bundle exec rake redmine:plugins:test NAME=$PLUGIN_NAME
+
+branches:
+  only:
+    - master

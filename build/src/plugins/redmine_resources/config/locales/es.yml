@@ -1,0 +1,66 @@
+es:
+  label_resources: Recursos
+  label_resource_booking_plural: Reserva de recursos
+  label_resource_planning: Planning de recursos
+  label_resources_new_booking: Nueva Reserva
+  label_resources_edit_booking: Editar Reserva
+  label_resources_leave_comment: Dejar un comentario
+  label_resources_scheduled: Cronograma
+  label_resources_total_scheduled: Cornograma total
+  label_resources_scheduled_for: para
+  label_resources_workday_length: Horas laborables por día
+  label_resources_load: Carga
+  label_resources_full_load: Carga completa
+  label_resources_overload: Sobrecargado
+  label_resources_underload: Carga baja
+  label_resources_f_hour_short: "%{value}h"
+  label_resources_dates: Fechas
+  label_resources_assigned_to_user: Asignado al usuario
+  label_resources_not_assigned_to_user: No asignado al usuario
+  label_resources_closed_issues: Tickets cerrados
+  label_resources_setting_taken_from: Esta configuración viene de
+  label_resources_line_title: Titulo de línea
+  label_resources_issue_subject: Asunto
+  label_resources_hours_per_day: Horas por día
+  label_resources_total_hours: Horas totales
+  label_my_resource_bookings: Mi reserva de recursos
+  label_resources_unbooked_time: Tiempo sin asignar
+  label_resources_capacity: Capacidad
+  label_resources_allocated: Asignado
+  label_resources_spent: Gasto
+  label_resources_weekends: Fines de semana
+  label_resources_project_names: Proyectos
+  label_resources_show_more: Ver más...
+
+  label_resource_booking_added: Reserva de recursos añadida
+  label_resource_booking_updated: Reserva de recursos actualizada
+  label_resource_booking_for_issue_added: 'La reserva para el ticket %{id} ha sido añadida por %{author}.'
+  label_resource_booking_for_project_added: 'La reserva para el proyecto %{id} ha sido añadida por %{author}.'
+  label_resource_booking_for_issue_updated: 'La reserva para el ticket %{id} ha sido actualizada por %{author}.'
+  label_resource_booking_for_project_updated: 'La reserva para el proyecto %{id} ha sido actualizada por%{author}.'
+
+  project_module_resources: Recursos
+  permission_view_resources: Ver Recursos
+  permission_add_booking: Añadir Reserva
+  permission_edit_booking: Editar Reserva
+
+  field_end_date: Ficha fin
+  field_booking_type: Reserva
+  field_start_hour: Hora de Inicio
+  field_end_hour: Hora de fin
+  field_hours_per_day: Horas/Día
+  field_hours_per_day_abbreviation: h/d
+
+  notice_could_not_delete: Nos puede borrar.
+  error_save_failed: Error al grabar.
+
+  label_resources_x_day_off:
+    one: "%{count} día libre"
+    other: "%{count} días libres"
+
+  activerecord:
+    errors:
+      messages:
+        greater_than_or_equal_to_start_date: debe ser mayor o igual que la fecha de inicio
+        less_than_or_equal_to_issue_due_date: 'mdebe ser menos o igual que la fecha fin (%{due_date})'
+        total_time_exceeds_estimated_time: El tiempo total de todas las asignaciones no puede exceder lo estimado

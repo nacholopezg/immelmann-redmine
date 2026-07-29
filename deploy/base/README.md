@@ -1,0 +1,1 @@
+El fichero networking-services-planifica.yaml contiene el puerto TCP 5000 necesario para el uso de nodejs junto a Planifica

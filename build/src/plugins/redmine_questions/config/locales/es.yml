@@ -1,0 +1,175 @@
+# encoding: utf-8
+# English strings go here for Rails i18n
+es:
+  label_questions: 'Ayuda y Soporte'
+  label_questions_search: 'Buscar una pregunta, respuesta o tópico...'
+  label_questions_new: Nueva pregunta
+  label_questions_message: Mensaje
+  label_questions_added_time: "Agregado hace %{value}"
+  label_questions_related_questions: Mensajes relacionados
+  label_questions_latest_messages: Últimos mensajes
+  label_questions_views: '%{count} vistas'
+  label_questions_votes: '%{count} votos'
+  label_questions_answers: '%{count} respuestas'
+  label_questions_tags: Etiquetas
+  label_questions_tagged_by: '%{count} tópico(s) etiquetado como %{tag}'
+  label_questions_notice_message: Mensaje noticia
+  label_questions_notice: Noticia
+  label_questions_most_voted: Más votados
+
+  button_questions_vote: Votar
+  button_questions_unvote: Quitar Voto
+  button_questions_like: Me gusta
+  button_questions_unlike: Ya no me gusta
+
+  field_questions_tags: Etiquetas
+
+  label_questions_add_comment: Añadir comentario
+  label_question_comment_successful_added: Comentario añadido con éxito
+  label_question_successful_update: Pregunta añadida con éxito
+  label_answer_successful_update: Respuesta actualizada con éxito
+  label_answer_successful_added: Respuesta añadida con éxito
+  lebel_questions_new_comment: Nuevo comentario
+
+  button_questions_to_issue: Convertir en ticket
+  button_questions_issue_to_question: Convertir a pregunta
+  label_questions_actions: Acciones
+  label_questions_accept: Aceptar
+
+  label_questions_section_type_questions: Preguntas
+  label_questions_section_type_solutions: Soluciones
+  label_questions_section_type_ideas: Ideas
+
+  label_questions_section: Sección
+  label_questions_sections_plural: Secciones
+  label_questions_section_new: Nueva sección
+  label_questions_section_type: Tipo de sección
+  label_questions_topic: Topic
+  label_questions_featured: Requisito
+  label_questions_locked: Bloqueado
+
+  project_module_questions: Ayuda y Soporte
+
+  i18n:
+    transliterate:
+      rule:
+        і: 'i'
+        ґ: 'g'
+        ё: 'yo'
+        №: '#'
+        є: 'e'
+        ї: 'yi'
+        а: 'a'
+        б: 'b'
+        в: 'v'
+        г: 'g'
+        д: 'd'
+        е: 'e'
+        ж: 'zh'
+        з: 'z'
+        и: 'i'
+        й: 'y'
+        к: 'k'
+        л: 'l'
+        м: 'm'
+        н: 'n'
+        о: 'o'
+        п: 'p'
+        р: 'r'
+        с: 's'
+        т: 't'
+        у: 'u'
+        ф: 'f'
+        х: 'h'
+        ц: 'ts'
+        ч: 'ch'
+        ш: 'sh'
+        щ: 'sch'
+        ъ: ''
+        ы: 'y'
+        ь: ''
+        э: 'e'
+        ю: 'yu'
+        я: 'ya'
+        "Ґ": "G"
+        "Ё": "YO"
+        "Є": "E"
+        "Ї": "YI"
+        "І": "I"
+        "А": "A"
+        "Б": "B"
+        "В": "V"
+        "Г": "G"
+        "Д": "D"
+        "Е": "E"
+        "Ж": "ZH"
+        "З": "Z"
+        "И": "I"
+        "Й": "Y"
+        "К": "K"
+        "Л": "L"
+        "М": "M"
+        "Н": "N"
+        "О": "O"
+        "П": "P"
+        "Р": "R"
+        "С": "S"
+        "Т": "T"
+        "У": "U"
+        "Ф": "F"
+        "Х": "H"
+        "Ц": "TS"
+        "Ч": "CH"
+        "Ш": "SH"
+        "Щ": "SCH"
+        "Ъ": "'"
+        "Ы": "Y"
+        "Ь": ""
+        "Э": "E"
+        "Ю": "YU"
+        "Я": "YA"
+  label_questions_comment: Comentario
+  label_questions_your_answer: Tu respuesta
+  label_questions_answer_plural: Respuestas
+  label_questions_x_votes:
+        one:   "voto"
+        other: "votos"
+  label_questions_wasthishelpful: ¿Le resultado útil?
+
+  label_question_plural: Preguntas
+  label_questions_related_solutions: Soluciones relacionadas
+  label_questions_section_edit: Editar sección
+  label_soluition_plural: Soluciones
+  label_questions_add_tag: '+ añadir tag'
+  label_questions_vote_added: Voto añadido
+  label_questions_vote_removed: Voto eliminado
+  label_questions_vote_own: Votar preguntas propias
+  label_questions_show_popular: Mostrar articulos populares de la sección
+  label_questions_most_popular: Más populares
+  label_questions_status_plural: Estado de las ideas
+  label_questions_status_closed: Cerrado
+  label_questions_status_new: Nuevo estado
+  label_questions_newest: Más nuevos
+  label_questions_active: Activo
+  label_questions_voted: Votado
+  label_questions_unanswered: Sin respuesta
+
+  permission_view_questions: Ver Ayuda y Soporte
+  permission_create_tags: Crear nuevos tags
+  permission_edit_messages_tags: Editar etiquetas
+  permission_edit_vote_messages: Votar mensajes
+  permission_add_answers: Añadir respuestas
+  permission_delete_answers: Eliminar respuestas
+  permission_edit_question_comments: Editar comentarios
+  permission_edit_own_question_comments: Editar comentarios propios
+  permission_comment_question: Añadir comentarios  
+  permission_add_questions: Añadir preguntas
+  permission_edit_questions: Editar preguntas
+  permission_edit_own_questions: Editar preguntas propias
+  permission_delete_questions: Borrar preguntas
+  permission_vote_questions: Votar preguntas
+  permission_accept_answers: Aceptar respuestas
+  permission_manage_sections: Gestionar secciones
+  permission_create_tags: Crear nuevos tags
+  label_questions_discard: Descartar
+  permission_edit_own_answers: Editar respuestas propias

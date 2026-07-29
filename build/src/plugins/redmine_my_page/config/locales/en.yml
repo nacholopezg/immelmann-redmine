@@ -1,0 +1,28 @@
+# English strings go here for Rails i18n
+en:
+  activities: Activity
+  custom_query_issues_list: Issue lists from my queries
+  my_custom_queries: My queries
+
+  label_my_activity_enable: Enable Activity listing in MyPage.
+  em_my_activity_enable: Check this to enable Activity page listing in the users My Page. Some bugs persist in the core Redmine activity fetcher.
+
+  label_select_query: Select Queries
+  label_update_query: Update Query Selection
+  label_my_custom_queries: Custom Queries
+  label_select_activities: Select Activities
+  label_update_activities: Update Activity Selection
+  label_my_activities: Activity
+  label_show_user_activity: For User
+  label_project_issues: Issue List of Project
+
+  label_activity_not_enabled: Activity Listing in My Page is not enabled.
+
+  label_custom_queries: Select Query
+  label_custom_query_limit: Limit Issue List
+
+  label_landing_page: Default Page after login
+  label_default_my_page: Pages
+
+  label_homelink_override: Override home link to users landing page
+  label_my_landing_page: My landing page

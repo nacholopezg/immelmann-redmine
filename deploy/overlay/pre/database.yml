@@ -1,0 +1,8 @@
+production:
+  adapter: "postgresql"
+  host: "s2595-aesa.aviacion.fomento.es"
+  port: "5432"
+  username: "redmineusr"
+  password: "Redmin$01N"
+  database: "redmine"
+  encoding: "utf8"

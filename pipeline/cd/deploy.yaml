@@ -1,0 +1,34 @@
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: deploy
+  namespace: openshift-pipelines
+spec:
+  params:
+    - default: overlay/val
+      description: Ruta al overlay de Kustomize
+      name: OVERLAY_PATH
+      type: string
+    - description: Nombre del deployment a reiniciar
+      name: DEPLOYMENT_NAME
+      type: string
+  steps:
+    - computeResources: {}
+      image: 'quay.io/openshift/origin-cli:latest'
+      name: apply-kustomize
+      script: |
+        #!/bin/sh
+        set -e
+        echo "Aplicando configuración con kustomize en $(workspaces.source.path)/$(params.OVERLAY_PATH)..."
+        oc apply -k $(workspaces.source.path)/$(params.OVERLAY_PATH)
+      workingDir: $(workspaces.source.path)
+    - computeResources: {}
+      image: 'quay.io/openshift/origin-cli:latest'
+      name: restart-deployment
+      script: |
+        #!/bin/sh
+        set -e
+        echo "Reiniciando el deployment $(params.DEPLOYMENT_NAME)..."
+        oc rollout restart deployment $(params.DEPLOYMENT_NAME)
+  workspaces:
+    - name: source

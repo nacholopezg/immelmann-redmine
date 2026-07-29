@@ -1,0 +1,19 @@
+== Redmine Resources plugin changelog
+
+Redmine Resources plugin - resource allocation and management for Redmine
+Copyright (C) 2011-2019 RedmineUP
+https://www.redmineup.com/
+
+== 2019-05-31 v1.0.1
+
+* Ajax resource diagram editing
+* Issue dates frame validation
+* Booking bar splitting 
+
+== 2019-02-14 v1.0.0
+
+* Initial release 
+* Resource allocation diagram 
+* Global workday length setting
+* Weekends handling 
+* My page personal Resources allocation widget

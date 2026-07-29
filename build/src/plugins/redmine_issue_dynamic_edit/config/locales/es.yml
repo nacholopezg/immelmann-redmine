@@ -1,0 +1,8 @@
+es:
+  ide_txt_validation_btn        : 'Validar la modificación'
+  ide_txt_error_positive_number : 'Debe ser un número positivo'
+  ide_txt_error_start_date      : 'La fecha de inicio debe ser anterior a la fecha de fin'
+  ide_txt_error_due_date        : 'La fecha de fin debe ser posterior a la fecha de inicio'
+  ide_txt_error_ajax_call       : 'Error (revisar la conosola de JS)'
+  ide_txt_cancel_btn            : 'Cancelar la modificación'
+  ide_txt_required_field        : 'Este campo es requerido para pasar el siguiente paso'

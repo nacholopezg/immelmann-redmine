@@ -1,0 +1,33 @@
+<% if Setting.plugin_redmine_my_page["my_activity_enable"] == "1" %>
+  <% query = IssueQuery.find_by_id(query_id) %>
+  <% if query.present? %>
+<style type="text/css">
+div#spinner
+{
+  display: none;
+  top: 50%;
+  left: 50%;
+  text-align:center;
+  z-index:2;
+  overflow: auto;
+}
+</style>
+
+  <div id="my-activities-<%= "#{query_id}" %>"></div>
+  <div id="spinner"><img src="../images/loading.gif" alt="Loading..."/></div>
+
+
+  <script type="text/javascript">
+    $.ajax({
+        url: "<%= query.project_id.nil? ? activity_path(:query_id => query_id) :
+                  project_activity_path( :id => query.project_id, :query_id => query_id ) %>",
+        cache: false,
+        success: function(html){$("#my-activities-"+ "<%= query_id %>").append(html);},
+        beforeSend: function(){$('#spinner').fadeIn('fast'); },
+        complete: function(){$('#spinner').fadeOut('fast'); }
+    });
+  </script>
+  <% end %>
+<% else %>
+  <h3> <%= l(:label_activity_not_enabled) %></h3>
+<% end %>

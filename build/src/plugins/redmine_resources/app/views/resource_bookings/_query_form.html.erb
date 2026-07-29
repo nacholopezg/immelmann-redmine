@@ -1,0 +1,59 @@
+<%= form_tag({ controller: 'resource_bookings', action: 'index', project_id: @project, months: params[:months] },
+             method: :get, id: 'query_form') do %>
+
+  <%= hidden_field_tag 'set_filter', '1' %>
+  <div id="query_form_with_buttons" class="hide-when-print">
+    <div id="query_form_content">
+      <fieldset id="filters" class="collapsible <%= @query.new_record? ? '' : 'collapsed' %>">
+        <legend onclick="toggleFieldset(this);"><%= l(:label_filter_plural) %></legend>
+        <div style="<%= @query.new_record? ? '' : 'display: none;' %>">
+          <%= render partial: 'queries/filters', locals: { query: @query } %>
+        </div>
+      </fieldset>
+
+      <fieldset id="options" class="collapsible collapsed">
+        <legend onclick="toggleFieldset(this);"><%= l(:label_options) %></legend>
+        <div style="display: none;">
+          <table>
+            <tr>
+              <td><label for="line_title_type"><%= l(:label_resources_line_title) %></label></td>
+              <td>
+                <%= select_tag :line_title_type, options_for_select(ResourceBookingChart::LINE_TITLE_TYPES.map { |type| [l("label_resources_#{type}"), type] }, @query.line_title_type) %>
+              </td>
+            </tr>
+            <tr>
+              <td><%= l(:button_show) %></td>
+              <td>
+                <label for="show_issues">
+                  <%= check_box 'query', 'show_issues', id: 'show_issues' %>
+                  <%= l(:label_issue_plural) %>
+                </label>
+                <label for="show_versions">
+                  <%= check_box 'query', 'show_versions', id: 'show_versions' %>
+                  <%= l(:label_version_plural) %>
+                </label>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </fieldset>
+    </div>
+
+    <p class="contextual">
+      <%= zoom_link(@rb_chart, :in) %>
+      <%= zoom_link(@rb_chart, :out) %>
+    </p>
+
+    <p class="buttons">
+      <%= text_field_tag 'months', @rb_chart.months, size: 2 %>
+      <%= l(:label_months_from) %>
+      <%= text_field 'query', 'date_from', size: 12, type: 'date' %><%= calendar_for('query_date_from') %>
+      <%= hidden_field_tag 'zoom', @rb_chart.zoom %>
+
+      <%= link_to_function l(:button_apply), '$("#query_form").submit()', class: 'icon icon-checked' %>
+      <%= link_to l(:button_clear), { project_id: @project, set_filter: 1 }, class: 'icon icon-reload' %>
+    </p>
+  </div>
+<% end %>
+
+<%= error_messages_for 'query' %>

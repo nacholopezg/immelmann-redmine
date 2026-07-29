@@ -1,0 +1,43 @@
+# English strings go here for Rails i18n
+en:
+  label_risks: Risks
+  label_risk: Risk
+  label_risk_plural: Risks
+  label_new_risk: New risk
+  label_risk_id: '#'
+  field_probability: Probability
+  field_impact: Impact
+  field_magnitude: Magnitude
+  field_strategy: Strategy
+  field_treatments: Treatments
+  field_lessons: Lessons learned
+  label_risk_status_open: Open
+  label_risk_status_closed: Closed
+  label_risk_status_rejected: Rejected
+  label_risk_probability_unlikely: Unlikely
+  label_risk_probability_low: Low
+  label_risk_probability_medium: Medium
+  label_risk_probability_high: High
+  label_risk_probability_expected: Expected
+  label_risk_impact_negligible: Negligible
+  label_risk_impact_minor: Minor
+  label_risk_impact_moderate: Moderate
+  label_risk_impact_significant: Significant
+  label_risk_impact_severe: Severe
+  label_risk_level_low: Low
+  label_risk_level_medium: Medium
+  label_risk_level_high: High
+  label_risk_level_extreme: Extreme
+  label_risk_strategy_accept: Accept
+  label_risk_strategy_mitigate: Mitigate
+  label_risk_strategy_transfer: Transfer
+  label_risk_strategy_eliminate: Eliminate
+  default_risk_category_internal: Internal
+  default_risk_category_external: External
+  default_risk_category_technical: Technical
+  default_risk_category_unforeseeable: Unforeseeable
+  enumeration_risk_categories: "Risk categories"
+  notice_risk_successful_create: "Risk successfully created."
+  notice_risk_successful_update: "Risk successfully updated."
+  notice_risk_successful_delete: "Risk successfully deleted."
+  text_risks_destroy_confirmation: 'Are you sure you want to delete the selected risk(s)?'

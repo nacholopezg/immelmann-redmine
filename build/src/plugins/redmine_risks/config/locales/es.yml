@@ -1,0 +1,43 @@
+# English strings go here for Rails i18n
+es:
+  label_risks: Riesgos
+  label_risk: Riesgo
+  label_risk_plural: Riesgos
+  label_new_risk: Nuevo riesgo
+  label_risk_id: '#'
+  field_probability: Probabilidad
+  field_impact: Impacto
+  field_magnitude: Magnitud
+  field_strategy: Estrategia
+  field_treatments: Tratamientos
+  field_lessons: Lecciones aprendidas
+  label_risk_status_open: Abierto
+  label_risk_status_closed: Cerrado
+  label_risk_status_rejected: Rechazado
+  label_risk_probability_unlikely: Improbable
+  label_risk_probability_low: Baja
+  label_risk_probability_medium: Media
+  label_risk_probability_high: Alta
+  label_risk_probability_expected: Esperada
+  label_risk_impact_negligible: Despreciable
+  label_risk_impact_minor: Menor
+  label_risk_impact_moderate: Moderado
+  label_risk_impact_significant: Significativo
+  label_risk_impact_severe: Severo
+  label_risk_level_low: Bajo
+  label_risk_level_medium: Medio
+  label_risk_level_high: Alto
+  label_risk_level_extreme: Muy Alto
+  label_risk_strategy_accept: Aceptar
+  label_risk_strategy_mitigate: Mitigar
+  label_risk_strategy_transfer: Transferir
+  label_risk_strategy_eliminate: Eliminar
+  default_risk_category_internal: Interno
+  default_risk_category_external: Externo
+  default_risk_category_technical: Técnico
+  default_risk_category_unforeseeable: Imprevisible
+  enumeration_risk_categories: "Categorías de riesgos"
+  notice_risk_successful_create: "Riesgo creado satisfactoriamente."
+  notice_risk_successful_update: "Riesgo actualizado satisfactoriamente."
+  notice_risk_successful_delete: "Riesgo eliminado satisfactoriamente."
+  text_risks_destroy_confirmation: 'Está usted seguro de querer borrar el(los) riesgo(s) seleccionado(s)?'

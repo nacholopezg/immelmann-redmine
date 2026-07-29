@@ -1,0 +1,124 @@
+# Planifica Pipeline 
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: planifica-pipeline
+  namespace: ci-cd
+spec:
+  params:
+    - default: new-aesa-registry-quay-local-quay.apps.ocpmgm.aviacion.fomento.es
+      description: Repositorio donde se almacenará la imagen.
+      name: IMAGE_REPO
+      type: string
+    - default: /aesa/planifica/planifica
+      description: Ruta de la imagen dentro del repositorio.
+      name: IMAGE_NAME
+      type: string
+    - description: Etiqueta (tag) de la imagen a construir.
+      name: IMAGE_TAG
+      type: string
+    - default: 'https://gitlab.apps.ocpmgm.aviacion.fomento.es/ci-cd/aesa-planifica.git'
+      description: URL del repositorio Git a clonar.
+      name: GIT_REPO
+      type: string
+    - default: main
+      description: Rama del repositorio Git a clonar.
+      name: GIT_BRANCH
+      type: string
+  tasks:
+    - name: clone-repository
+      params:
+        - name: URL
+          value: $(params.GIT_REPO)
+        - name: REVISION
+          value: $(params.GIT_BRANCH)
+        - name: SPARSE_CHECKOUT_DIRECTORIES
+          value: 'src,build'
+        - name: DELETE_EXISTING
+          value: 'true'
+        - name: SUBDIRECTORY
+          value: repo-clone
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: git-clone
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: output
+          workspace: planifica-pvc
+        - name: basic-auth
+          workspace: gitlab-credentials
+    - name: build-and-push-image
+      params:
+        - name: IMAGE
+          value: '$(params.IMAGE_REPO)$(params.IMAGE_NAME):$(params.IMAGE_TAG)'
+        - name: DOCKERFILE
+          value: repo-clone/build/Dockerfile
+        - name: CONTEXT
+          value: repo-clone/build
+      runAfter:
+        - clone-repository
+      taskRef:
+        params:
+          - name: kind
+            value: task
+          - name: name
+            value: buildah
+          - name: namespace
+            value: openshift-pipelines
+        resolver: cluster
+      workspaces:
+        - name: source
+          workspace: planifica-pvc
+        - name: dockerconfig
+          workspace: quay-credentials
+  workspaces:
+    - description: PersistentVolumeClaim donde se clonará el código fuente.
+      name: planifica-pvc
+    - description: Secret con credenciales de Docker para autenticación en el registro de contenedores.
+      name: quay-credentials
+    - description: Secret con credenciales de GitLab para autenticación en el repositorio de código.
+      name: gitlab-credentials
+---
+# Secret Gitlab credentials
+kind: Secret
+apiVersion: v1
+metadata:
+  name: gitlab-credentials
+  namespace: ci-cd
+stringData: 
+  .git-credentials: https://CHANGEME:CHANGEME@gitlab.apps.ocpmgm.aviacion.fomento.es
+  .gitconfig: |
+    [credential "https://gitlab.apps.ocpmgm.aviacion.fomento.es"]
+      helper = store
+type: Opaque
+---
+# Secret Quay credentials
+kind: Secret
+apiVersion: v1
+metadata:
+  name: quay-credentials
+  namespace: ci-cd
+stringData:
+  .dockerconfigjson: >
+    {"auths":{"https://new-aesa-registry-quay-local-quay.apps.ocpmgm.aviacion.fomento.es":{"username":"CHANGEME","password":"CHANGEME","auth":"CHANGEME","email":""}}}
+type: kubernetes.io/dockerconfigjson
+---
+# Planifica PVC
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: planifica-pvc
+  namespace: ci-cd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: ocs-storagecluster-ceph-rbd
+  volumeMode: Filesystem
