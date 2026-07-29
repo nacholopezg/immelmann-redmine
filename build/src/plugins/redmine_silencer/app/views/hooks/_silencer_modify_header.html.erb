@@ -1,0 +1,14 @@
+
+<% if User.current.pref[:silencer_global_on] == true %>
+	<style>
+		/*
+		Stylesheets that are applyed only if silencer is ON
+		*/
+		#top-menu {
+		    background-color: black;
+		}
+		#redmine_silencer_menu_link {
+		    color: #9452A5 !important;
+		}
+	</style>
+<% end %>

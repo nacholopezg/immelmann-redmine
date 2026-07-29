@@ -16,7 +16,8 @@ jsToolBar.prototype.elements.macros = {
 jsToolBar.prototype.macroMenu = function(fn){
   var menu = $('<ul style="position:absolute;"></ul>');
   for (var i = 0; i < this.macroList.length; i++) {
-    $('<li></li>').text(this.macroList[i]).appendTo(menu).mousedown(function(){
+    var macroItem = $('<div></div>').text(this.macroList[i]);
+    $('<li></li>').html(macroItem).appendTo(menu).mousedown(function() {
       fn($(this).text());
     });
   }
@@ -24,7 +25,7 @@ jsToolBar.prototype.macroMenu = function(fn){
   menu.menu().width(170).position({
     my: 'left top',
     at: 'left bottom',
-    of: this.toolNodes['precode']
+    of: this.toolNodes['macros']
   });
   $(document).on('mousedown', function() {
     menu.remove();

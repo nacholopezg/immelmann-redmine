@@ -1,6 +1,8 @@
 # German strings go here for Rails i18n
-# German translation by Tobias Fischer https://github.com/paginagmbh
 de:
-  label_silencer_suppress_mail: "Unterdrücke E-Mail-Benachrichtigung"
-  permission_suppress_mail_notifications: "E-Mail-Benachrichtigung unterdrücken"
-  silencer_default_settings_label: "Checkbox zum Unterdrücken der Ticket-E-Mail-Benachrichtigungen standardmäßig aktivieren?"
+  setting_supress_default: "Lautloser Modus auf Problemebene standardmäßig aktiviert?"
+  permission_suppress_mail_issue_switch: "Betreffende E-Mail-Benachrichtigungen unterdrücken"
+  permission_suppress_mail_global_switch: "E-Mail-Benachrichtigungen global unterdrücken"
+  supress_email_label: "E-Mail-Benachrichtigung unterdrücken"
+  supress_email_label_lock: "E-Mail-Benachrichtigung unterdrücken (global aktiviert)"
+  supress_email_menu_switch_label: "Silent-Modus"

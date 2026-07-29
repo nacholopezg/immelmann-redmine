@@ -1,4 +1,5 @@
-# Formater
+# frozen_string_literal: true
+
 module Additionals
   module Formatter
     SMILEYS = { 'smiley' => ':-?\)', # :)
@@ -18,61 +19,77 @@ module Additionals
                 'angel' => '[Oo][=:]-?\)', # O:)
                 'evil' => '>[=:;]-?[)(]', # >:)
                 'rock' => 'B-?\)', # B)
-                'rose' => '@[)\}][-\\/\',;()>\}]*', # @}->-
                 'exclamation' => '[\[(]![\])]', # (!)
                 'question' => '[\[(]\?[\])]', # (?)
                 'check' => '[\[(]\\/[\])]', # (/)
                 'success' => '[\[(]v[\])]', # (v)
                 'failure' => '[\[(]x[\])]' }.freeze # (x)
 
+    NON_SMILEY_COLOR = %w[exclamation question check success failure].freeze
+
     def render_inline_smileys(text)
       return text if text.blank?
 
-      inline_smileys(text)
-      text
+      content = text.dup
+      inline_smileys content
+      content
     end
 
     def inline_smileys(text)
       SMILEYS.each do |name, regexp|
         text.gsub!(/(\s|^|>|\))(!)?(#{regexp})(?=\W|$|<)/m) do
-          leading = Regexp.last_match(1)
-          esc = Regexp.last_match(2)
-          smiley = Regexp.last_match(3)
+          leading = Regexp.last_match 1
+          esc = Regexp.last_match 2
+          smiley = Regexp.last_match 3
           if esc.nil?
-            leading + content_tag(:span,
-                                  '',
-                                  class: "additionals smiley smiley-#{name}",
-                                  title: smiley)
+            css_class = NON_SMILEY_COLOR.exclude?(name) ? 'smiley' : 'info-smiley'
+            svg_code = ActionController::Base.helpers.svg_sprite_icon "smiley-#{name}",
+                                                                      css_class:,
+                                                                      title: smiley
+
+            leading.to_s + ActionController::Base.helpers.tag.span(svg_code,
+                                                                   class: "additionals smiley a-icon smiley-#{name}",
+                                                                   title: smiley)
           else
-            leading + smiley
+            leading.to_s + smiley
           end
         end
       end
     end
 
+    def emoji_tag(emoji, _emoji_code = nil)
+      return unless emoji
+
+      data = {
+        name: emoji.name,
+        unicode_version: emoji.unicode_version
+      }
+      options = { title: emoji.description, data: }
+
+      ActionController::Base.helpers.content_tag 'additionals-emoji', emoji.codepoints, options
+    end
+
+    def with_emoji?(text)
+      text.match? emoji_pattern
+    end
+
+    def emoji_pattern
+      @emoji_pattern ||= TanukiEmoji.index.alpha_code_pattern
+    end
+
     def inline_emojify(text)
-      text.gsub!(/:([\w+-]+):/) do |match|
-        emoji_code = Regexp.last_match(1)
-        emoji = Emoji.find_by_alias(emoji_code) # rubocop:disable Rails/DynamicFindBy
-        if emoji.present?
-          tag(:img,
-              src: inline_emojify_image_path(emoji.image_filename),
-              title: ":#{emoji_code}:",
-              style: 'vertical-align: middle',
-              width: '20',
-              height: '20')
+      return text unless with_emoji? text
+
+      text.gsub! emoji_pattern do |match|
+        emoji_code = Regexp.last_match 1
+        emoji = TanukiEmoji.find_by_alpha_code emoji_code # rubocop: disable Rails/DynamicFindBy
+        if emoji
+          emoji_tag emoji, emoji_code
         else
           match
         end
       end
       text
-    end
-
-    def inline_emojify_image_path(image_filename)
-      path = Setting.protocol + '://' + Setting.host_name
-      # TODO: use relative path, if not for mailer
-      # path = '/' + Rails.public_path.relative_path_from Rails.root.join('public')
-      "#{path}/images/emoji/" + image_filename
     end
   end
 end

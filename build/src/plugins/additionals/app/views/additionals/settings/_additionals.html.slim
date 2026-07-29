@@ -1,7 +1,5 @@
-' Need Help? :
-= link_to(l(:label_additionals_doc),
-          'https://additionals.readthedocs.io/en/latest/',
-          class: 'external',
-          target: '_blank',
-          rel: 'noopener')
-= render_tabs additionals_settings_tabs
+= render_tabs [{ name: 'general', partial: 'additionals/settings/general', label: :label_general },
+               { name: 'wiki', partial: 'additionals/settings/wiki', label: :label_wiki },
+               { name: 'macros', partial: 'additionals/settings/macros', label: :label_macro_plural },
+               { name: 'rules', partial: 'additionals/settings/issues', label: :label_issue_plural },
+               { name: 'web', partial: 'additionals/settings/web_apis', label: :label_web_apis }]

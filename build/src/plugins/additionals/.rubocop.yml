@@ -1,14 +1,23 @@
 require:
   - rubocop-performance
   - rubocop-rails
+  - rubocop-minitest
+
+AllCops:
+  TargetRubyVersion: 3.1
+  TargetRailsVersion: 6.1
+  NewCops: enable
+  ActiveSupportExtensionsEnabled: true
 
 Rails:
   Enabled: true
 
-AllCops:
-  TargetRubyVersion: 2.4
-  TargetRailsVersion: 5.2
-  NewCops: enable
+Minitest/MultipleAssertions:
+  Max: 15
+  Enabled: true
+
+Minitest/AssertPredicate:
+  Enabled: false
 
 Metrics/AbcSize:
   Enabled: false
@@ -16,11 +25,18 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Enabled: false
 
+Metrics/ParameterLists:
+  Enabled: true
+  CountKeywordArgs: false
+
 Metrics/ClassLength:
   Enabled: false
 
 Metrics/CyclomaticComplexity:
-  Max: 20
+  Max: 25
+
+Style/HashConversion:
+  Enabled: true
 
 Layout/LineLength:
   Max: 140
@@ -37,6 +53,9 @@ Metrics/PerceivedComplexity:
 Rails/ApplicationJob:
   Enabled: false
 
+Lint/AmbiguousOperatorPrecedence:
+  Enabled: false
+
 Rails/ApplicationRecord:
   Enabled: false
 
@@ -49,24 +68,87 @@ Rails/HelperInstanceVariable:
 Rails/SkipsModelValidations:
   Enabled: false
 
+Rails/Output:
+  Enabled: true
+  Exclude:
+    - 'db/migrate/*'
+
 Performance/ChainArrayAllocation:
   Enabled: true
 
 Style/AutoResourceCleanup:
   Enabled: true
 
+Style/ExpandPathArguments:
+  Enabled: true
+  Exclude:
+    - additionals.gemspec
+    - test/**/*
+
 Style/FrozenStringLiteralComment:
+  Enabled: true
+  Exclude:
+    - '/**/*.rsb'
+
+Style/OptionHash:
+  Enabled: true
+  SuspiciousParamNames:
+    - options
+    - api_options
+    - opts
+    - args
+    - params
+    - parameters
+    - settings
+  Exclude:
+    - lib/additionals/patches/*.rb
+
+# postgresql and mysql are supported
+# autodetect does not work without database configuration
+Rails/BulkChangeTable:
+  Enabled: true
+  Database: postgresql
+
+Style/ReturnNil:
+  Enabled: true
+
+Style/UnlessLogicalOperators:
+  Enabled: true
+
+Style/MethodCallWithArgsParentheses:
+  Enabled: true
+  AllowParenthesesInMultilineCall: true
+  AllowParenthesesInChaining: true
+  EnforcedStyle: omit_parentheses
+
+Style/SuperWithArgsParentheses:
   Enabled: false
 
 Style/Documentation:
   Enabled: false
 
-# required for travis/ci (symbolic links problem)
-Style/ExpandPathArguments:
+Naming/VariableNumber:
+  Enabled: true
+  Exclude:
+    - 'test/**/*'
+
+Style/StringConcatenation:
+  Exclude:
+    - 'app/views/additionals/_select2_ajax_call.*'
+
+Layout/LineContinuationLeadingSpace:
   Enabled: false
 
-Style/HashTransformKeys:
+# see https://github.com/rubocop/rubocop-rails/issues/578
+# redmine does not use load_defaults: https://rails.rubystyle.guide/#config-defaults
+Rails/RedundantPresenceValidationOnBelongsTo:
   Enabled: false
 
-Style/HashTransformValues:
+# this linter does not work with redirect_to
+Rails/ActionControllerFlashBeforeRender:
+  Enabled: true
+  Exclude:
+    - app/controllers/dashboards_controller.rb
+
+Bundler/DuplicatedGroup:
   Enabled: false

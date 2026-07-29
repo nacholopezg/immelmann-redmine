@@ -1,0 +1,8 @@
+# Polish strings go here for Rails i18n
+pl:
+  setting_supress_default: "Tryb cichy na pozionie zagadnienia domyślnie włączony?"
+  permission_suppress_mail_issue_switch: "Blokowanie wysyłki email w issue"
+  permission_suppress_mail_global_switch: "Blokowanie wysyłki email globalnie"
+  supress_email_label: "Nie wysyłaj notyfikacji email"
+  supress_email_label_lock: "Nie wysyłaj notyfikacji email (wyłączone globalnie)"
+  supress_email_menu_switch_label: "Tryb cichy"

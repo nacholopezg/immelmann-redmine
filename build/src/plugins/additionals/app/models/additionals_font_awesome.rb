@@ -1,15 +1,17 @@
+# frozen_string_literal: true
+
 class AdditionalsFontAwesome
   include Redmine::I18n
 
-  FORMAT_REGEXP = /\Afa[rsb]\_[a-zA-Z0-9]+[a-zA-Z0-9\-]*\z/.freeze
+  FORMAT_REGEXP = /\Afa[rsb]_[a-zA-Z0-9]+[a-zA-Z0-9-]*\z/
   SEARCH_LIMIT = 50
 
   class << self
     def load_icons(type)
-      data = YAML.safe_load(ERB.new(IO.read(Rails.root.join('plugins/additionals/config/fontawesome_icons.yml'))).result) || {}
+      data = RedminePluginKit::Loader.new(plugin_id: 'additionals').yaml_config_load 'fontawesome_icons.yml'
       icons = {}
       data.each do |key, values|
-        icons[key] = { unicode: values['unicode'], label: values['label'] } if values['styles'].include?(convert_type2style(type))
+        icons[key] = { unicode: values['unicode'], label: values['label'] } if values['styles'].include? convert_type2style(type)
       end
       icons
     end
@@ -48,7 +50,7 @@ class AdditionalsFontAwesome
     end
 
     def classes(value)
-      info = value_info(value)
+      info = value_info value
       return '' if info.blank?
 
       info[:classes]
@@ -65,27 +67,27 @@ class AdditionalsFontAwesome
     # show only one value as current selected
     # (all other options are retrieved by select2
     def active_option_for_select(selected)
-      info = value_info(selected, with_details: true)
+      info = value_info selected, with_details: true
       return [] if info.blank?
 
       [[info[:label], selected]]
     end
 
-    def value_info(value, options = {})
+    def value_info(value, with_details: false)
       return {} if value.blank?
 
-      values = value.split('_')
+      values = value.split '_'
       return {} unless values.count == 2
 
       info = { type: values[0].to_sym,
                name: "fa-#{values[1]}" }
 
       info[:classes] = "#{info[:type]} #{info[:name]}"
-      info[:font_weight] = font_weight(info[:type])
-      info[:font_family] = font_family(info[:type])
+      info[:font_weight] = font_weight info[:type]
+      info[:font_family] = font_family info[:type]
 
-      if options[:with_details]
-        info.merge!(load_details(info[:type], values[1]))
+      if with_details
+        info.merge! load_details(info[:type], values[1])
         return {} if info[:unicode].blank?
       end
 
@@ -94,12 +96,12 @@ class AdditionalsFontAwesome
 
     def search_for_select(search, selected = nil)
       # could be more then one
-      selected_store = selected.to_s.split(',')
-      icons = search_in_type(:far, search, selected_store)
+      selected_store = selected.to_s.split ','
+      icons = search_in_type :far, search, selected_store
       cnt = icons.count
       return icons if cnt >= SEARCH_LIMIT
 
-      icons += search_in_type(:fas, search, selected_store, cnt)
+      icons += search_in_type :fas, search, selected_store, cnt
       cnt = icons.count
       return icons if cnt >= SEARCH_LIMIT
 
@@ -109,7 +111,7 @@ class AdditionalsFontAwesome
     def convert2mermaid(icon)
       return if icon.blank?
 
-      parts = icon.split('_')
+      parts = icon.split '_'
       return unless parts.count == 2
 
       "#{parts.first}:fa-#{parts.last}"
@@ -125,21 +127,21 @@ class AdditionalsFontAwesome
                               search[0].downcase
                             elsif search_length.zero? && selected_store.any?
                               selected = selected_store.first
-                              fa = selected.split('_')
+                              fa = selected.split '_'
                               search = fa[1][0] if fa.count > 1
                               search
                             end
 
       FONTAWESOME_ICONS[type].each do |fa_symbol, values|
-        break if SEARCH_LIMIT == cnt
+        break if cnt == SEARCH_LIMIT
 
         id = key2value(fa_symbol, type[-1])
-        next if !selected_store.include?(id) &&
+        next if selected_store.exclude?(id) &&
                 search.present? &&
                 (first_letter_search.present? && !values[:label].downcase.start_with?(first_letter_search) ||
                  first_letter_search.blank? && values[:label] !~ /#{search}/i)
 
-        icons << { id: id, text: values[:label] }
+        icons << { id:, text: values[:label] }
         cnt += 1
       end
 
@@ -147,12 +149,12 @@ class AdditionalsFontAwesome
     end
 
     def load_details(type, name)
-      return {} unless FONTAWESOME_ICONS.key?(type)
+      return {} unless FONTAWESOME_ICONS.key? type
 
       values = FONTAWESOME_ICONS[type][name]
       return {} if values.blank?
 
-      { unicode: "&#x#{values[:unicode]};".html_safe, label: values[:label] } # rubocop:disable Rails/OutputSafety
+      { unicode: "&#x#{values[:unicode]};".html_safe, label: values[:label] } # rubocop: disable Rails/OutputSafety
     end
   end
 end

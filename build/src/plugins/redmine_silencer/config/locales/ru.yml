@@ -1,4 +1,8 @@
 # Russian strings go here for Rails i18n
 ru:
-  label_silencer_suppress_mail: "Не отправлять уведомления по email"
-  permission_suppress_mail_notifications: "Не отправлять уведомления по email"
+  setting_supress_default: "Тихий режим на уровне проблемы включен по умолчанию?"
+  permission_suppress_mail_issue_switch: "Подавить уведомления по электронной почте в проблеме"
+  permission_suppress_mail_global_switch: "Отключить уведомления по электронной почте глобально"
+  supress_email_label: "Скрыть уведомление по электронной почте"
+  supress_email_label_lock: "Отключить уведомление по электронной почте (включено глобально)"
+  supress_email_menu_switch_label: "Бесшумный режим"

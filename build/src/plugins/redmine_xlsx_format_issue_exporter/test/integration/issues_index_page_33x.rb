@@ -12,7 +12,7 @@ module RedmineXlsxFormatIssueExporter
 
     def setup
       visit '/projects/ecookbook/issues'
-      assert_not_nil page
+      assert_visit
     end
 
     def teardown
@@ -55,5 +55,11 @@ module RedmineXlsxFormatIssueExporter
       assert_equal 200, page.status_code
     end
 
+    def test_that_dialog_is_closed_when_cancel_is_clicked
+      click_link("XLSX")
+      find("div#xlsx-export-options").click_button("Cancel")
+
+      assert find("div#xlsx-export-options", :visible => false)
+    end
   end
 end

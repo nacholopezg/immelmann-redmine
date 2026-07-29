@@ -2,21 +2,18 @@ require File.expand_path(File.dirname(__FILE__) + '/../test_helper')
 
 module RedmineXlsxFormatIssueExporter
   class IssuesIndexPageTest < ActionDispatch::IntegrationTest
-    fixtures :projects, :trackers, :issue_statuses, :issues,
-             :enumerations, :users, :issue_categories, :queries,
-             :projects_trackers, :issue_relations, :watchers,
+    fixtures :projects, :trackers, :issue_statuses, :issues, :roles,
+             :member_roles, :enumerations, :users, :issue_categories,
+             :queries, :projects_trackers, :issue_relations, :watchers,
              :journals, :journal_details, :attachments,
              :members, :enabled_modules, :workflows,
              :custom_values, :custom_fields, :custom_fields_projects, :custom_fields_trackers,
              :versions, :time_entries
 
-    ActiveRecord::FixtureSet.create_fixtures(
-        File.dirname(__FILE__) + '/../fixtures/', [:roles, :member_roles])
-
     def setup
       Capybara.reset!
       visit '/projects/ecookbook/issues'
-      assert_not_nil page
+      assert_visit
     end
 
     def teardown
@@ -43,13 +40,6 @@ module RedmineXlsxFormatIssueExporter
       click_link("XLSX")
 
       assert find("div#xlsx-export-options", :visible => true)
-    end
-
-    def test_that_dialog_is_closed_when_cancel_is_clicked
-      click_link("XLSX")
-      find("div#xlsx-export-options").click_button("Cancel")
-
-      assert find("div#xlsx-export-options", :visible => false)
     end
 
     def test_that_export_with_selected_columns
@@ -168,9 +158,10 @@ module RedmineXlsxFormatIssueExporter
   end
 end
 
-if ((Redmine::VERSION::MAJOR == 3) && (Redmine::VERSION::MINOR >= 4)) or
-   (Redmine::VERSION::MAJOR >= 4) then
+if (Redmine::VERSION::MAJOR >= 4) then
   require File.expand_path(File.dirname(__FILE__) + '/issues_index_page_latest')
+elsif (Redmine::VERSION::MAJOR == 3) && (Redmine::VERSION::MINOR == 4) then
+  require File.expand_path(File.dirname(__FILE__) + '/issues_index_page_34x')
 else
   require File.expand_path(File.dirname(__FILE__) + '/issues_index_page_33x')
 end

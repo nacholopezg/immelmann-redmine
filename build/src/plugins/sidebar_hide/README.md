@@ -1,3 +1,7 @@
+This plugin was originally developed by Berk Demirkır and hosted in this repo: https://github.com/bdemirkir/sidebar_hide
+The repository has since been deleted (moved to GitLab: https://gitlab.com/bdemirkir/sidebar_hide and not maintained).
+That's why we are now maintaining this plugin here.
+
 Hide Sidebar
 ====================
 
@@ -10,16 +14,28 @@ Features
 
 Installation
 ====================
+
 Change to redmine/plugins folder and run:
 ```bash
-  git clone https://github.com/bdemirkir/sidebar_hide.git
+git clone https://github.com/nanego/redmine_hide_sidebar.git
 ```
 
 Tested with...
 ====================
 
 Redmine:
- * =3.3.0
+
+|Plugin branch| Redmine Version | Test Status       |
+|-------------|-----------------|-------------------|
+|master       | 5.1.3           | [![5.1.3][1]][5]  |
+|master       | 4.2.11          | [![4.2.11][2]][5] |
+|master       | master          | [![master][4]][5] |
+
+[1]: https://github.com/nanego/redmine_hide_sidebar/actions/workflows/5_1_3.yml/badge.svg
+[2]: https://github.com/nanego/redmine_hide_sidebar/actions/workflows/4_2_11.yml/badge.svg
+[4]: https://github.com/nanego/redmine_hide_sidebar/actions/workflows/master.yml/badge.svg
+[5]: https://github.com/nanego/redmine_hide_sidebar/actions
+
 
 Themes:
  * Default themes

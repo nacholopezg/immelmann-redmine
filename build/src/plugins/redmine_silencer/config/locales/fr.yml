@@ -1,5 +1,8 @@
 # French strings go here for Rails i18n
 fr:
-  label_silencer_suppress_mail: "Pas de notification"
-  permission_suppress_mail_notifications: "Supprimer les notifications"
-  silencer_default_settings_label: "Cocher la case pour supprimer par défaut les emails de notification"
+  setting_supress_default: "Le mode silencieux au niveau du problème est-il activé par défaut?"
+  permission_suppress_mail_issue_switch: "Supprimer les notifications par e-mail en cause"
+  permission_suppress_mail_global_switch: "Supprimer les notifications par e-mail à l'échelle mondiale"
+  supress_email_label: "Supprimer la notification par e-mail"
+  supress_email_label_lock: "Supprimer la notification par e-mail (ON globalement)"
+  supress_email_menu_switch_label: "Mode silencieux"

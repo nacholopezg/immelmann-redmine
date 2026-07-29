@@ -1,5 +1,8 @@
 # Czech strings go here
 cs:
-  label_silencer_suppress_mail: "Neposílej e-mail"
-  permission_suppress_mail_notifications: "Zobrazit checkbox o neposílání e-mailů"
-  silencer_default_settings_label: "Nastavit výchozí stav checkboxu o neposílání e-mailů na zapnuto"
+  setting_supress_default: "Je ve výchozím nastavení povolen tichý režim na úrovni problému?"
+  permission_suppress_mail_issue_switch: "Potlačit e-mailová upozornění na problém"
+  permission_suppress_mail_global_switch: "Globálně potlačit e-mailová upozornění"
+  supress_email_label: "Potlačit upozornění e-mailem"
+  supress_email_label_lock: "Potlačit upozornění e-mailem (globálně ZAPNUTO)"
+  supress_email_menu_switch_label: "Tichý mód"

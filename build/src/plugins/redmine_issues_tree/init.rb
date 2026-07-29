@@ -1,4 +1,4 @@
-require_dependency 'redmine_issues_tree/hook_listener'
+require_relative 'lib/redmine_issues_tree'
 
 plugin_name = :redmine_issues_tree
 
@@ -6,7 +6,7 @@ Redmine::Plugin.register plugin_name do
   name 'Redmine Issues Tree plugin'
   author 'Ivan Zabrovskiy'
   description 'Provides a tree view of the issues list'
-  version RedmineIssuesTree::VERSION
+  version RedmineIssuesTree::Version
   url 'https://github.com/Loriowar/redmine_issues_tree'
   author_url 'https://loriowar.com/about'
 
@@ -15,24 +15,6 @@ Redmine::Plugin.register plugin_name do
              'default_redirect_to_tree_view' => 'false',
              'default_redirect_to_tree_view_without_project' => 'false'
            }
-end
-
-Rails.configuration.to_prepare do
-  prepend_patches_map =
-    {
-      ::RedmineIssuesTree::IssuesControllerPatch => ::IssuesController
-    }
-  prepend_patches_map.each_pair do |patch, target|
-    target.send(:prepend, patch) unless target.included_modules.include?(patch)
-  end
-
-  include_patch_map =
-    {
-      ::RedmineIssuesTree::IssuesHelperPatch => ::IssuesHelper
-    }
-  include_patch_map.each_pair do |patch, target|
-    target.send(:include, patch) unless target.included_modules.include?(patch)
-  end
 end
 
 # Assign permissions on a tree_view actions. Permissions is same as for :view_issues.

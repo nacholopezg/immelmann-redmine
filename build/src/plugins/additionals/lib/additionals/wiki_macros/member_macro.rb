@@ -1,77 +1,88 @@
-# Member wiki macros
+# frozen_string_literal: true
+
 module Additionals
   module WikiMacros
-    Redmine::WikiFormatting::Macros.register do
-      desc <<-DESCRIPTION
-  Display members.
+    module MemberMacro
+      Redmine::WikiFormatting::Macros.register do
+        desc <<-DESCRIPTION
+    Display members.
 
-  Syntax:
+    Syntax:
 
-    {{members([PROJECT_NAME, title=My members list, role=ROLE, with_sum=BOOL)]}}
+      {{members([PROJECT_NAME, title=My members list, role=ROLE, with_sum=BOOL)]}}
 
-    PROJECT_NAME can be project identifier, project name or project id
+      PROJECT_NAME can be project identifier, project name or project id
 
-  Examples:
+    Parameters:
 
-    {{members}}
-    ...List all members for all projects (with the current user permission)
+      :param string project_name: can be project identifier, project name or project id
+      :param string title: title to use for member list
+      :param string role: only list members with this role. If you want to use multiple roles as filters, you have to use a | as separator.
+      :param bool with_sum: show amount of members.
 
-    {{members(with_sum=true)}}
-    ...List all members for all projects and show title with amount of members
+    Examples:
 
-    {{members(the-identifier)}}
-    ...A box showing all members for the project with the identifier of 'the-identifier'
+      {{members}}
+      ...List all members for all projects (with the current user permission)
 
-    {{members(the-identifier, role=Manager)}}
-    ...A box showing all members for the project with the identifier of 'the-identifier', which
-    have the role "Manager"
+      {{members(with_sum=true)}}
+      ...List all members for all projects and show title with amount of members
 
-    {{members(the-identifier, title=My user list)}}
-    ...A box showing all members for the project with the identifier of 'the-identifier' and with
-    box title "My user list"
-      DESCRIPTION
+      {{members(the-identifier)}}
+      ...A box showing all members for the project with the identifier of 'the-identifier'
 
-      macro :members do |_obj, args|
-        args, options = extract_macro_options(args, :role, :title, :with_sum)
+      {{members(the-identifier, role=Manager)}}
+      ...A box showing all members for the project with the identifier of 'the-identifier', which
+      have the role "Manager"
 
-        project_id = args[0]
-        user_roles = []
+      {{members(the-identifier, title=My user list)}}
+      ...A box showing all members for the project with the identifier of 'the-identifier' and with
+      box title "My user list"
+        DESCRIPTION
 
-        if project_id.present?
-          project_id.strip!
+        macro :members do |_obj, args|
+          args, options = extract_macro_options args, :role, :title, :with_sum
 
-          project = Project.visible.find_by(id: project_id)
-          project ||= Project.visible.find_by(identifier: project_id)
-          project ||= Project.visible.find_by(name: project_id)
-          return if project.nil?
+          project_id = args[0]
+          user_roles = []
 
-          principals = project.visible_users
-          return if principals.nil?
+          if project_id.present?
+            project_id.strip!
 
-          users = []
-          principals.each do |principal|
-            next unless principal.type == 'User'
+            project = Project.visible.find_by id: project_id
+            project ||= Project.visible.find_by identifier: project_id
+            project ||= Project.visible.find_by name: project_id
+            return unless project
 
-            user_roles[principal.id] = principal.roles_for_project(project)
-            users << principal if options[:role].blank? || Additionals.check_role_matches(user_roles[principal.id], options[:role])
+            principals = project.visible_users
+            return unless principals
+
+            users = []
+            principals.each do |principal|
+              next unless principal.type == 'User'
+
+              user_roles[principal.id] = principal.roles_for_project project
+              users << principal if options[:role].blank? || Additionals.check_role_matches(user_roles[principal.id], options[:role])
+            end
+          else
+            users = User.visible
+                        .where(type: 'User')
+                        .active
+                        .includes([:email_address])
+                        .sorted
           end
-        else
-          users = User.visible
-                      .where(type: 'User')
-                      .active
-                      .sorted
+
+          list_title = if options[:with_sum]
+                         list_title = options[:title].presence || l(:label_member_plural)
+                         list_title + " (#{users.count})"
+                       else
+                         options[:title]
+                       end
+
+          render('wiki/user_macros', users:,
+                                     user_roles:,
+                                     list_title:)
         end
-
-        list_title = if options[:with_sum]
-                       list_title = options[:title].presence || l(:label_member_plural)
-                       list_title + " (#{users.count})"
-                     else
-                       options[:title]
-                     end
-
-        render partial: 'wiki/user_macros', locals: { users: users,
-                                                      user_roles: user_roles,
-                                                      list_title: list_title }
       end
     end
   end

@@ -1,4 +1,8 @@
 # Japanese strings go here for Rails i18n
 ja:
-  label_silencer_suppress_mail: "この更新ではメール通知しない"
-  permission_suppress_mail_notifications: "この更新ではメール通知しない"
+  setting_supress_default: "問題レベルのサイレントモードはデフォルトで有効になっていますか？"
+  permission_suppress_mail_issue_switch: "問題の電子メール通知を抑制します"
+  permission_suppress_mail_global_switch: "電子メール通知をグローバルに抑制"
+  supress_email_label: "電子メール通知を抑制します"
+  supress_email_label_lock: "電子メール通知を抑制します（グローバルにオン）"
+  supress_email_menu_switch_label: "サイレントモード"

@@ -1,6 +1,8 @@
 # Bulgarian strings go here for Rails i18n
-# Translated by Ivan Cenov
 bg:
-  label_silencer_suppress_mail: "Без изпращане известия по e-mail"
-  permission_suppress_mail_notifications: "Забрана за изпращане на известия по e-mail"
-  silencer_default_settings_label: "Забраната за изпращане на известия по e-mail да бъде активна по подразбиране"
+  setting_supress_default: "Безшумен режим на ниво проблем е активиран по подразбиране?"
+  permission_suppress_mail_issue_switch: "Потискайте известията по имейл в проблем"
+  permission_suppress_mail_global_switch: "Потискайте известията по имейл в световен мащаб"
+  supress_email_label: "Потискайте известията по имейл"
+  supress_email_label_lock: "Потискане на известията по имейл (ВКЛЮЧЕНО в световен мащаб)"
+  supress_email_menu_switch_label: "Тих режим"

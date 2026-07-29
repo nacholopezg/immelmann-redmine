@@ -1,7 +1,17 @@
-require File.expand_path('../../test_helper', __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path '../../test_helper', __FILE__
 
 class AccountControllerTest < Additionals::ControllerTest
-  fixtures :users, :email_addresses, :roles
+  fixtures :users, :groups_users, :email_addresses, :user_preferences,
+           :roles, :members, :member_roles,
+           :issues, :issue_statuses, :issue_relations,
+           :issues, :issue_statuses, :issue_categories,
+           :versions, :trackers,
+           :projects, :projects_trackers, :enabled_modules,
+           :enumerations
+
+  fixtures :hrm_user_types, :hrm_working_calendars if AdditionalsPlugin.active_hrm?
 
   def setup
     Setting.default_language = 'en'
@@ -9,23 +19,25 @@ class AccountControllerTest < Additionals::ControllerTest
   end
 
   def test_get_login_with_welcome_text
-    with_additionals_settings(account_login_bottom: 'Lore impsuum') do
-      get :login
-      assert_response :success
-      assert_select 'input[name=username]'
-      assert_select 'input[name=password]'
-      assert_select 'div.login-additionals', text: /Lore impsuum/
-    end
+    change_plugin_settings 'additionals', account_login_bottom: 'Lore impsuum'
+
+    get :login
+
+    assert_response :success
+    assert_select 'input[name=username]'
+    assert_select 'input[name=password]'
+    assert_select 'div.login-additionals', text: /Lore impsuum/
   end
 
   def test_get_login_without_welcome_text
-    with_additionals_settings(account_login_bottom: '') do
-      get :login
-      assert_response :success
-      assert_select 'input[name=username]'
-      assert_select 'input[name=password]'
-      assert_select 'div.login-additionals', count: 0
-    end
+    change_plugin_settings 'additionals', account_login_bottom: ''
+
+    get :login
+
+    assert_response :success
+    assert_select 'input[name=username]'
+    assert_select 'input[name=password]'
+    assert_select 'div.login-additionals', count: 0
   end
 
   # See integration/account_test.rb for the full test
@@ -39,9 +51,11 @@ class AccountControllerTest < Additionals::ControllerTest
                                firstname: 'John',
                                lastname: 'Doe',
                                mail: 'register@example.com' } }
+
         assert_redirected_to '/my/account'
       end
-      user = User.order(id: :desc).first
+      user = User.last
+
       assert_equal 'register', user.login
       assert_equal 'John', user.firstname
       assert_equal 'Doe', user.lastname

@@ -1,6 +1,8 @@
 # Spanish strings go here for Rails i18n
-# Spanish translation by Andres Arias https://github.com/mrlocke
 es:
-  label_silencer_suppress_mail: "Silenciar las notificaciones por correo"
-  permission_suppress_mail_notifications: "Silenciar las notificaciones por correo"
-  silencer_default_settings_label: "Marque la casilla para suprimir las notificaciones por correo por defecto"
+  setting_supress_default: "¿Modo silencioso en el nivel de problema habilitado de forma predeterminada?"
+  permission_suppress_mail_issue_switch: "Suprimir notificaciones de correo electrónico en cuestión"
+  permission_suppress_mail_global_switch: "Suprimir las notificaciones de correo electrónico a nivel mundial"
+  supress_email_label: "Suprimir notificación por correo electrónico"
+  supress_email_label_lock: "Suprimir notificación por correo electrónico (ON globalmente)"
+  supress_email_menu_switch_label: "Modo silencioso"

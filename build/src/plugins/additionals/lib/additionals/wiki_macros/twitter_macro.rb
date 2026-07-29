@@ -1,32 +1,47 @@
-# Twitter wiki macros
+# frozen_string_literal: true
+
 module Additionals
   module WikiMacros
-    Redmine::WikiFormatting::Macros.register do
-      desc <<-DESCRIPTION
-  Creates link to twitter account page or topic.
+    module TwitterMacro
+      Redmine::WikiFormatting::Macros.register do
+        desc <<-DESCRIPTION
+    Creates link to twitter account page or topic.
+
+    Syntax:
+
     {{twitter(name)}}
-      DESCRIPTION
 
-      macro :twitter do |_obj, args|
-        raise 'The correct usage is {{twitter(<name>)}}' if args.empty?
+    Parameters:
 
-        name = args[0].strip
-        case name[0]
-        when '@'
-          link_to(font_awesome_icon('fab_twitter', post_text: name),
-                  "https://twitter.com/#{name[1..-1]}",
-                  class: 'external twitter',
-                  title: l(:label_twitter_account))
-        when '#'
-          link_to(font_awesome_icon('fab_twitter-square', post_text: name),
-                  "https://twitter.com/hashtag/#{name[1..-1]}",
-                  class: 'external twitter',
-                  title: l(:label_twitter_hashtag))
-        else
-          link_to(font_awesome_icon('fab_twitter', post_text: " @#{name}"),
-                  "https://twitter.com/#{name}",
-                  class: 'external twitter',
-                  title: l(:label_twitter_account))
+      :param string profile: Twitter profile name with @. E.g. alphanodes
+
+    Examples:
+
+    {{twitter(alphanodes)}} - Show link to twitter profile `@alphanodes`
+    {{twitter(#redmine)}} - Show link to hashtag `#redmine`
+        DESCRIPTION
+
+        macro :twitter do |_obj, args|
+          raise 'The correct usage is {{twitter(<name>)}}' if args.empty?
+
+          name = args[0].strip
+          case name[0]
+          when '@'
+            link_to_external font_awesome_icon('fab_twitter', post_text: name),
+                             "https://twitter.com/#{name[1..]}",
+                             class: 'twitter',
+                             title: l(:label_twitter_account)
+          when '#'
+            link_to_external font_awesome_icon('fab_twitter-square', post_text: name),
+                             "https://twitter.com/hashtag/#{name[1..]}",
+                             class: 'twitter',
+                             title: l(:label_twitter_hashtag)
+          else
+            link_to_external font_awesome_icon('fab_twitter', post_text: " @#{name}"),
+                             "https://twitter.com/#{name}",
+                             class: 'twitter',
+                             title: l(:label_twitter_account)
+          end
         end
       end
     end

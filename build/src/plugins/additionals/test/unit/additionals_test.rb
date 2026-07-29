@@ -1,4 +1,6 @@
-require File.expand_path('../../test_helper', __FILE__)
+# frozen_string_literal: true
+
+require File.expand_path '../../test_helper', __FILE__
 
 class AdditionalsTest < Additionals::TestCase
   fixtures :projects, :users, :members, :member_roles, :roles,
@@ -10,25 +12,6 @@ class AdditionalsTest < Additionals::TestCase
 
   def setup
     prepare_tests
-  end
-
-  def test_true
-    assert Additionals.true? 1
-    assert Additionals.true? true
-    assert Additionals.true? 'true'
-    assert Additionals.true? 'True'
-
-    assert_not Additionals.true?(-1)
-    assert_not Additionals.true? 0
-    assert_not Additionals.true? '0'
-    assert_not Additionals.true? 1000
-    assert_not Additionals.true? false
-    assert_not Additionals.true? 'false'
-    assert_not Additionals.true? 'False'
-    assert_not Additionals.true? 'yes'
-    assert_not Additionals.true? ''
-    assert_not Additionals.true? nil
-    assert_not Additionals.true? 'unknown'
   end
 
   def test_settings
@@ -49,11 +32,39 @@ class AdditionalsTest < Additionals::TestCase
     assert_not Additionals.setting?(:add_go_to_top)
   end
 
-  def test_load_macros
-    assert_equal ['fa'], Additionals.load_macros(['fa'])
+  def test_split_ids
+    assert_equal [1, 2, 3], Additionals.split_ids('1, 2 , 3')
+    assert_equal [3, 2], Additionals.split_ids('3, 2, 2')
+    assert_equal [1, 2], Additionals.split_ids('1, 2 3')
+    assert_empty Additionals.split_ids('')
+    assert_equal [0], Additionals.split_ids('non-number')
+  end
 
-    assert_raises LoadError do
-      Additionals.load_macros(%w[fa invalid])
+  def test_split_ids_with_ranges
+    assert_equal [1, 2, 3, 4, 5], Additionals.split_ids('1, 2 , 3, 3 - 5')
+    assert_equal [1, 2, 3, 4, 5], Additionals.split_ids('1, 2 , 3, 5 - 2')
+    assert_equal [1, 2, 3], Additionals.split_ids('1, 2 , 3, 5 - 3 - 1')
+  end
+
+  def test_split_ids_with_restricted_large_range
+    assert_equal [33_333, 33_334, 33_335, 33_336, 62_519], Additionals.split_ids('62519-33333', limit: 5)
+  end
+
+  def test_single_page_limit
+    with_settings per_page_options: '10, 35, 50' do
+      assert_equal 35, Additionals.single_page_limit
+    end
+  end
+
+  def test_single_page_limit_with_single_setting
+    with_settings per_page_options: '10' do
+      assert_equal 10, Additionals.single_page_limit
+    end
+  end
+
+  def test_single_page_limit_without_settings
+    with_settings per_page_options: nil do
+      assert_equal 25, Additionals.single_page_limit
     end
   end
 end

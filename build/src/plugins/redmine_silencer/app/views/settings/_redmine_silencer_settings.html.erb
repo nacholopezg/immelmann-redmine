@@ -1,4 +1,5 @@
-	<p>
-	  <label><%= l(:silencer_default_settings_label) %></label>
-	  <%= check_box_tag 'settings[silencer_default]', '1', @settings['silencer_default'] %>
-	</p>
+
+<div style="display: block;"><%= l(:setting_supress_default) %>
+  <%= check_box_tag 'settings[silencer_issue_on_default]', '1', @settings['silencer_issue_on_default'] %>
+</div>
+  

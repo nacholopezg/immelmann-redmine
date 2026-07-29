@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Additionals
   module Patches
     module ReportsControllerPatch
@@ -10,11 +12,13 @@ module Additionals
       module InstanceOverwriteMethods
         def issue_report_details
           super
-          return if @rows.nil?
+          return unless @rows
 
           if Setting.issue_group_assignment? && params[:detail] == 'assigned_to'
-            @rows = @project.visible_principals
-          elsif %w[assigned_to author].include? params[:detail]
+            @rows = @project.visible_principals + [User.new(firstname: "[#{l :label_none}]")]
+          elsif params[:detail] == 'assigned_to'
+            @rows = @project.visible_users + [User.new(firstname: "[#{l :label_none}]")]
+          elsif params[:detail] == 'author'
             @rows = @project.visible_users
           end
         end

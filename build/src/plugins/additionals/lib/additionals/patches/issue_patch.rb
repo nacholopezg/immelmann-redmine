@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 module Additionals
   module Patches
     module IssuePatch
       extend ActiveSupport::Concern
 
       included do
+        prepend InstanceOverwriteMethods
         include InstanceMethods
 
-        alias_method :editable_without_additionals?, :editable?
-        alias_method :editable?, :editable_with_additionals?
         validate :validate_change_on_closed
         validate :validate_timelog_required
         validate :validate_current_user_status
         before_validation :auto_assigned_to
-        before_save :change_status_with_assigned_to_change,
-                    :autowatch_involved
+        before_save :change_status_with_assigned_to_change
+
+        after_commit :add_assigned_watcher
 
         safe_attributes 'author_id',
                         if: proc { |issue, user|
@@ -23,95 +25,59 @@ module Additionals
       end
 
       class_methods do
-        def join_issue_status(options = {})
+        def join_issue_status(is_closed: nil)
           sql = "JOIN #{IssueStatus.table_name} ON #{IssueStatus.table_name}.id = #{table_name}.status_id"
-          return sql unless options.key?(:is_closed)
+          return sql if is_closed.nil?
 
-          sql << " AND #{IssueStatus.table_name}.is_closed ="
-          sql << if options[:is_closed]
-                   " #{connection.quoted_true}"
-                 else
-                   " #{connection.quoted_false}"
-                 end
+          sql << " AND #{IssueStatus.table_name}.is_closed = #{is_closed ? connection.quoted_true : connection.quoted_false}"
           sql
         end
       end
 
+      module InstanceOverwriteMethods
+        def editable?(user = User.current)
+          return false unless super
+          return true unless closed?
+          return true unless Additionals.setting? :issue_freezed_with_close
+
+          user.allowed_to? :edit_closed_issues, project
+        end
+      end
+
       module InstanceMethods
+        def add_assigned_watcher
+          return unless assigned_to_id
+          return unless assigned_to.is_a? User
+          return unless author.pref.auto_watch_on? 'issue_assigned'
+          return if watcher_user_ids.include? assigned_to_id
+          return unless assigned_to.active?
+
+          set_watcher assigned_to, true
+        end
+
         def sidbar_change_status_allowed_to(user, new_status_id = nil)
-          statuses = new_statuses_allowed_to(user)
+          statuses = new_statuses_allowed_to user
           if new_status_id.present?
             statuses.detect { |s| new_status_id == s.id && !timelog_required?(s.id) }
           else
-            statuses.reject { |s| timelog_required?(s.id) }
+            statuses.reject { |s| timelog_required? s.id }
           end
-        end
-
-        def add_autowatcher(watcher)
-          return if watcher.nil? ||
-                    !watcher.is_a?(User) ||
-                    watcher.anonymous? ||
-                    !watcher.active? ||
-                    watched_by?(watcher)
-
-          add_watcher(watcher)
-        end
-
-        def autowatch_involved
-          return unless Additionals.setting?(:issue_autowatch_involved) &&
-                        User.current.pref.autowatch_involved_issue
-
-          add_autowatcher(User.current)
-          add_autowatcher(author) if (new_record? || author_id != author_id_was) && author != User.current
-          unless assigned_to_id.nil? || assigned_to_id == User.current.id
-            add_autowatcher(assigned_to) if new_record? || assigned_to_id != assigned_to_id_was
-          end
-
-          true
         end
 
         def log_time_allowed?(user = User.current)
           !status_was.is_closed || user.allowed_to?(:log_time_on_closed_issues, project)
         end
-
-        def editable_with_additionals?(user = User.current)
-          return false unless editable_without_additionals?(user)
-          return true unless closed?
-          return true unless Additionals.setting?(:issue_freezed_with_close)
-
-          user.allowed_to?(:edit_closed_issues, project)
-        end
-      end
-
-      def autoassign_get_group_list
-        return unless Setting.issue_group_assignment?
-
-        project.memberships
-               .active
-               .where("#{Principal.table_name}.type='Group'")
-               .includes(:user, :roles)
-               .each_with_object({}) do |m, h|
-          m.roles.each do |r|
-            h[r] ||= []
-            h[r] << m.principal
-          end
-          h
-        end
       end
 
       def new_ticket_message
-        @new_ticket_message ||= Additionals.setting(:new_ticket_message).presence || ''
+        project.active_new_ticket_message
       end
 
       def status_x_affected?(new_status_id)
-        return false unless Additionals.setting?(:issue_current_user_status)
+        return false unless Additionals.setting? :issue_current_user_status
         return false if Additionals.setting(:issue_assign_to_x).blank?
 
-        if Additionals.setting(:issue_assign_to_x).include?(new_status_id.to_s)
-          true
-        else
-          false
-        end
+        Additionals.setting(:issue_assign_to_x).include? new_status_id.to_s
       end
 
       private
@@ -124,17 +90,38 @@ module Additionals
 
         return unless Additionals.setting(:issue_auto_assign_status).include?(status_id.to_s)
 
-        self.assigned_to_id = auto_assigned_to_user
-        true
+        user_id = auto_assigned_user_id
+        self.assigned_to_id = user_id if user_id.present?
       end
 
-      def auto_assigned_to_user
-        manager_role = Role.builtin.find_by(id: Additionals.setting(:issue_auto_assign_role))
+      def auto_assigned_user_id
+        manager_role = Role.builtin.find_by id: Additionals.setting(:issue_auto_assign_role)
         groups = autoassign_get_group_list
         return groups[manager_role].first.id unless groups.nil? || groups[manager_role].blank?
 
-        users_list = project.users_by_role
-        return users_list[manager_role].first.id if users_list[manager_role].present?
+        principals_by_role = project.principals_by_role
+        return if principals_by_role[manager_role].blank?
+
+        users_list = principals_by_role[manager_role].select { |u| u.is_a? User }
+        return if users_list.blank?
+
+        users_list.first.id
+      end
+
+      def autoassign_get_group_list
+        return unless Setting.issue_group_assignment?
+
+        project.memberships
+               .active
+               .where(users: { type: 'Group' })
+               .includes(:user, :roles)
+               .each_with_object({}) do |m, h|
+          m.roles.each do |r|
+            h[r] ||= []
+            h[r] << m.principal
+          end
+          h
+        end
       end
 
       def timelog_required?(check_status_id)
@@ -152,7 +139,7 @@ module Additionals
       end
 
       def validate_timelog_required
-        return true unless timelog_required?(status_id)
+        return true unless timelog_required? status_id
 
         errors.add :base, :issue_requires_timelog
       end
