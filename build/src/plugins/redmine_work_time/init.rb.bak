@@ -38,10 +38,10 @@ Redmine::Plugin.register :redmine_work_time do
   settings :default => {'account_start_days' => {}, 'show_account_menu' => 'true'},
            :partial => 'settings/work_time_settings'
 
-  Rails.application.config.to_prepare do
+  Rails.configuration.to_prepare do
     require_dependency 'projects_helper'
-    unless ProjectsHelper.included_modules.include?(WorkTimeProjectsHelperPatch::ProjectsHelperPatch)
-      ProjectsHelper.prepend(WorkTimeProjectsHelperPatch::ProjectsHelperPatch)
+    unless ProjectsHelper.included_modules.include? WorkTimeProjectsHelperPatch
+      ProjectsHelper.send(:include, WorkTimeProjectsHelperPatch)
     end
   end
 end

@@ -1,4 +1,4 @@
-FROM new-aesa-registry-quay-local-quay.apps.ocpmgm.aviacion.fomento.es/aesa/base/redmine:4.0.9-passenger
+FROM new-aesa-registry-quay-local-quay.apps.ocpmgm.aviacion.fomento.es/aesa/base/redmine:5.1.7-passenger
 
 ARG UNAME=redmine2
 ARG UID=1000

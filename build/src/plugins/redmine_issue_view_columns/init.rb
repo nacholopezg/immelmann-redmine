@@ -4,7 +4,7 @@ Redmine::Plugin.register :redmine_issue_view_columns do
   name "Redmine Issue View Columns"
   author "Kenan Dervišević"
   description "Customize shown columns in subtasks and related issues on issue page"
-  version "1.0.1"
+  version "1.0.1-redmine51"
   url "https://github.com/kenan3008/redmine_issue_view_columns"
 
   project_module :issue_view_columns do
@@ -13,6 +13,10 @@ Redmine::Plugin.register :redmine_issue_view_columns do
   settings default: { "empty": true }, partial: "settings/issue_view_columns_settings"
 end
 
-# helper methods needed for the Settings page of the project also
-ProjectsController.send :helper, IssueViewColumnsHelper
-IssuesController.send :helper, IssueViewColumnsIssuesHelper
+Rails.application.config.to_prepare do
+  require_dependency 'projects_controller'
+  ProjectsController.helper(IssueViewColumnsHelper) unless ProjectsController.included_modules.include?(IssueViewColumnsHelper)
+
+  require_dependency 'issues_controller'
+  IssuesController.helper(IssueViewColumnsIssuesHelper) unless IssuesController.included_modules.include?(IssueViewColumnsIssuesHelper)
+end
