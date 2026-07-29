@@ -16,7 +16,6 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 require 'log_file'
 class LogsController < ApplicationController
-  unloadable
   layout 'admin'
   before_action :require_admin
   before_action :require_correct_path, :except => [:index]
